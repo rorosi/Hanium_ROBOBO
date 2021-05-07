@@ -1,16 +1,14 @@
-//flex 센서로 서보모터
 #include <Servo.h>
 #include <MPU6050.h>
 
+//객체 및 핀 번호 변수 선언
 MPU6050 mpu;
- 
+Servo servo;
+
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 int val1;
 int prevVal;
-
-//객체 및 핀 번호 변수 선언
-Servo servo;
 int flexPin = A0, servoPin = 9;
 
 void setup() {
