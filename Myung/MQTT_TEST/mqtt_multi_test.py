@@ -27,16 +27,28 @@ def conn_aws(client_name):
 
 
 def send_message():
-	i=0
+	test_num = 0
 	myMQTTClient = conn_aws("write_client")
+
+	json_message = '''{
+		"message":"myung",
+		"num":0
+	}'''
+	
 	while True:
 		myMQTTClient.publish(
 			topic = "home/helloworld",		
-			QoS = 0,
-			payload = "myung hello"+str(i)
+			QoS = 1,
+			payload = json_message
 		) #write
+
+		test_num = test_num + 1
+
+		python_message = json.loads(json_message)
+		python_message['num'] = test_num
+		json_message = json.dumps(python_message)
+
 		time.sleep(1)
-		i=i+1
 
 
 
@@ -47,8 +59,9 @@ def call_subscribe():
 		time.sleep(1)
 
 def recv_message(self, topic, packet):
-	d = json.loads(packet.payload)
-	print(d['message'])
+	come_message = json.loads(packet.payload)
+	print("message : ", come_message['message'])
+	print("test_num : ", come_message['num'])
 	#read
 
 
