@@ -6,7 +6,7 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
 
 def conn_ard():
-	port = "/dev/ttyACM0"
+	port = "/dev/ttyACM1"
 	ser = serial.Serial(port, 9600)
 	ser.flushInput()
 	return ser
@@ -35,31 +35,31 @@ def conn_aws(client_name):
 
 
 def send_to_ard(ard_client):
-
 	myAWS = conn_aws("write_client")
 	global myARD
 	myARD = ard_client
 	
 	while True:
-		myAWS.subscribe("server/read", 1, recv_message_to_ard)
-		time.sleep(1)
+		myAWS.subscribe("server/client", 1, recv_message_to_ard)
 
 
 def recv_message_to_ard(self, topic, packet):
 	ard_client = myARD
 	come_message = json.loads(packet.payload)
 
-	sensor_data = come_message['name_1']+come_message['finger_1']+come_message['name_2']+come_message['finger_2']+come_message['name_3']+come_message['finger_3']
-	print(sensor_data)
-	print("-------------------------------------------------")
+	sensor_data = come_message['name_1']+come_message['finger_1']+come_message['name_2']+come_message['finger_2']+come_message['name_3']+come_message['finger_3']+"\n"
+	
+	sensor_data = str(sensor_data)
+
 	ard_client.write(sensor_data.encode())
+
+
 
 
 def call_subscribe():
 	myAWS = conn_aws("read_client")
 	while True:
-		myAWS.subscribe("server/read", 1, recv_message_test) #read
-		time.sleep(1)
+		myAWS.subscribe("server/client", 1, recv_message_test) #read
 
 def recv_message_test(self, topic, packet):
 	come_message = json.loads(packet.payload)
@@ -96,8 +96,8 @@ if __name__ == '__main__':
 	#procs.append(proc2)
 	#proc2.start()
 
-	for proc in procs:
-		proc.join()
+	#for proc in procs:
+	#	proc.join()
 
 
 
