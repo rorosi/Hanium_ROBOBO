@@ -49,8 +49,9 @@ def recv_message_to_ard(self, topic, packet):
 	ard_client = myARD
 	come_message = json.loads(packet.payload)
 
-	sensor_data = come_message['sensor_data']
+	sensor_data = come_message['name_1']+come_message['finger_1']+come_message['name_2']+come_message['finger_2']+come_message['name_3']+come_message['finger_3']
 	print(sensor_data)
+	print("-------------------------------------------------")
 	ard_client.write(sensor_data.encode())
 
 
@@ -62,8 +63,10 @@ def call_subscribe():
 
 def recv_message_test(self, topic, packet):
 	come_message = json.loads(packet.payload)
-	print("sensor_data : ", come_message['sensor_data'])
-	print("sensor_number : ", come_message['sensor_number'])
+	print("엄지 : ", come_message['finger_1'])
+	print("검지 : ", come_message['finger_2'])
+	print("약지 : ", come_message['finger_3'])
+
 	#read #라즈베리파이에 메시지가 잘오는지 검사하기 위한 것
 
 	

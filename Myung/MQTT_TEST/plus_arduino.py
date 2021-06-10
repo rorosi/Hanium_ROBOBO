@@ -6,7 +6,7 @@ from multiprocessing import Process, Queue
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
 def conn_ard():
-	port = "/dev/ttyACM0"
+	port = "/dev/ttyUSB0"
 	ser = serial.Serial(port, 9600)
 	ser.flushInput()
 	return ser
@@ -50,8 +50,12 @@ def send_message(client_ard):
 	arduino = client_ard
 
 	json_message = '''{
-		"sensor_data":0,
-		"sensor_number":0
+		"finger_1":0,
+		"name_1":"엄지",
+		"finger_2":0,
+		"name_2":"검지",
+		"finger_3":0,
+		"name_3":"약지"
 	}'''
 	#aws 로 보내는 말을 json 형태로 저장
 	
@@ -62,12 +66,20 @@ def send_message(client_ard):
 		#ard_data_int = int(ard_data)
 		ard_data_str = str(ard_data.decode())
 
-		sensor_num = ard_data_str[0:1]
-		sensor_talk = ard_data_str[1:]
-
+		sensor_num1 = ard_data_str[0:1]
+		sensor_talk1 = ard_data_str[1:4] #엄지 데이터
+		sensor_num2 = ard_data_str[4:5]
+		sensor_talk2 = ard_data_str[5:8] #검지 데이터
+		sensor_num3 = ard_data_str[8:9]
+		sensor_talk3 = ard_data_str[9:12] #약지 데이터
 		python_message = json.loads(json_message)
-		python_message['sensor_data'] = sensor_talk
-		python_message['sensor_number'] = sensor_num
+		python_message['finger_1'] = sensor_talk1
+		python_message['finger_2'] = sensor_talk2
+		python_message['finger_3'] = sensor_talk3
+
+		python_message['name_1'] = sensor_num1
+		python_message['name_2'] = sensor_num2
+		python_message['name_3'] = sensor_num3
 		#파이썬에서 json 형식의 메시지를 바꾸기위해 json 형식을 python 형식으로 파싱하고 수정
 
 		myMQTTClient.publish(
@@ -99,8 +111,10 @@ def call_subscribe():
 
 def recv_message(self, topic, packet):
 	come_message = json.loads(packet.payload)
-	print("sensor_data : ", come_message['sensor_data'])
-	print("sensor_number : ", come_message['sensor_number'])
+	print("엄지", " : ", come_message['finger_1'])
+	print("검지", " : ", come_message['finger_2'])
+	print("약지", " : ", come_message['finger_3'])
+	print("--------------------------------------------------------------------")
 	#위의 subscribe 메소드에 의해 실행될 함수
 	#topic에는 지정된 채팅방 이름이 저장됌
 	#packet에는 aws 오는 메시지가 json 형식으로 저장됌
