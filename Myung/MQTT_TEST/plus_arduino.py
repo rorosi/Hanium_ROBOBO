@@ -45,7 +45,7 @@ def conn_aws(client_name):
 # 라즈베리파이 -> aws로 메시지 보내는 함수 선언 / 멀티프로세스 write_client라고 이름정의
 
 def send_message(client_ard):
-	test_num = 0
+	test_num = "hello"
 	myMQTTClient = conn_aws("write_client")
 	arduino = client_ard
 
@@ -60,12 +60,9 @@ def send_message(client_ard):
 	#aws 로 보내는 말을 json 형태로 저장
 	
 	while True:
-
 		ard_data = arduino.readline()
-		#print("de test ", ard_data.decode())
-		#ard_data_int = int(ard_data)
-		ard_data_str = str(ard_data.decode())
-
+		
+		ard_data_str = ard_data.decode()
 		sensor_num1 = ard_data_str[0:1]
 		sensor_talk1 = ard_data_str[1:4] #엄지 데이터
 		sensor_num2 = ard_data_str[4:5]
@@ -95,8 +92,8 @@ def send_message(client_ard):
 
 		json_message = json.dumps(python_message)
 		#위에서 다시 publish를 해야하기 때문에 최신화된 메시지를 json형식으로 파싱
-		time.sleep(1)
-
+		
+		
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # aws -> 라즈베리파이로 메시지 읽어오기
@@ -105,7 +102,6 @@ def call_subscribe():
 	myMQTTClient = conn_aws("read_client")
 	while True:
 		myMQTTClient.subscribe("server/read", 1, recv_message) #read
-		time.sleep(1)
 	#subscribe 메소드를 이용해 메시지를 읽어올 (채팅방 지정, QoS 설정, 이용할 함수) 지정
 
 
@@ -132,7 +128,7 @@ if __name__ == '__main__':
 
 	procs = []
 
-	proc1 = Process(target=send_message, args=(client_ard,))
+	proc1 = Process(target=send_message, args=(client_ard, ))
 	procs.append(proc1)
 	proc1.start()
 
