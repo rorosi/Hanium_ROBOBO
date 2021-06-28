@@ -31,20 +31,25 @@ void loop() {
   int flexValue3 = bluetooth.read(flexValue3);
   int flexValue4 = bluetooth.read(flexValue4);
   
-  int gyroValue = bluetooth.read(gyroValue);
-  int prevValue;
-  
   // 손가락 모터 구동
   int angle0 = map(flexValue0, 550, 350, 0, 180); servo0.write(angle0);
+  servo0.write(angle0);
   int angle1 = map(flexValue1, 550, 350, 0, 180); servo1.write(angle1);
+  servo1.write(angle1);  
   int angle2 = map(flexValue2, 550, 350, 0, 180); servo2.write(angle2);
+  servo2.write(angle2);  
   int angle3 = map(flexValue3, 550, 350, 0, 180); servo3.write(angle3);
+  servo3.write(angle3);  
   int angle4 = map(flexValue4, 550, 350, 0, 180); servo4.write(angle4);  
+  servo4.write(angle4);  
+    
+  int gyroValue = bluetooth.read(gyroValue);
+  int prevValue;
   
   // 손목 모터 구동
   if (gyroValue != prevVal)
   {
-      servo5.write(gyroValue);
+      servo5.write(gyroValue);     
       prevVal = gyroValue;
   } 
 }
