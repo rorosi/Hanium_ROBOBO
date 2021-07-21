@@ -27,6 +27,8 @@
 ## 5. 서버 열기
 
     uv4l --external-driver --device-name=video0
+    
+    ![2](/uploads/12dbcdeb3b2835297cbd8e1266901452/2.png)
 
 #6. 웹에 접속 하기
 
