@@ -49,17 +49,20 @@ def send_message(client_ard):
 	myMQTTClient = conn_aws("write_client")
 	arduino = client_ard
 
+	sensor_num = [0,0,0,0,0]
+	sensor_talk = [0,0,0,0,0]
+
+	old_num = [0, 0, 0, 0, 0]
+	new_num = [0,0,0,0,0,]
+
 	json_message = '''{
-		"finger_1":0,
-		"name_1":"엄지",
-		"finger_2":0,
-		"name_2":"검지",
-		"finger_3":0,
-		"name_3":"중지",
-		"finger_4":0,
-		"name_4":"약지",
-		"finger_5":0,
-		"name_5":"새끼"
+		"data":[
+			{"finger":0, "name":"엄지"},
+			{"finger":0, "name":"검지"},
+			{"finger":0, "name":"약지"},
+			{"finger":0, "name":"중지"},
+			{"finger":0, "name":"새끼"}
+		]
 	}'''
 	#aws 로 보내는 말을 json 형태로 저장
 	
@@ -67,34 +70,43 @@ def send_message(client_ard):
 		ard_data = arduino.readline()
 		
 		ard_data_str = ard_data.decode()
-		sensor_num1 = ard_data_str[0:1]
-		sensor_talk1 = ard_data_str[1:4] #엄지 데이터
+		sensor_num[0] = ard_data_str[0:1]
+		sensor_talk[0] = ard_data_str[1:3] #엄지 데이터
 
-		sensor_num2 = ard_data_str[5:6]
-		sensor_talk2 = ard_data_str[6:9] #검지 데이터
+		sensor_num[1] = ard_data_str[4:5]
+		sensor_talk[1] = ard_data_str[5:7] #검지 데이터
 
-		sensor_num3 = ard_data_str[10:11]
-		sensor_talk3 = ard_data_str[11:14] #중지 데이터
+		sensor_num[2] = ard_data_str[8:9]
+		sensor_talk[2] = ard_data_str[9:11] #중지 데이터
 
-		sensor_num4 = ard_data_str[15:16]
-		sensor_talk4 = ard_data_str[16:19] #약지 데이터
+		sensor_num[3] = ard_data_str[12:13]
+		sensor_talk[3] = ard_data_str[13:15] #약지 데이터
 
-		sensor_num5 = ard_data_str[20:21]
-		sensor_talk5 = ard_data_str[21:24] #새끼 데이터
+		sensor_num[4] = ard_data_str[16:17]
+		sensor_talk[4] = ard_data_str[17:19] #새끼 데이터
 
 
 		python_message = json.loads(json_message)
-		python_message['finger_1'] = sensor_talk1
-		python_message['finger_2'] = sensor_talk2
-		python_message['finger_3'] = sensor_talk3
-		python_message['finger_4'] = sensor_talk4
-		python_message['finger_5'] = sensor_talk5
+		i=0
 
-		python_message['name_1'] = sensor_num1
-		python_message['name_2'] = sensor_num2
-		python_message['name_3'] = sensor_num3
-		python_message['name_4'] = sensor_num4
-		python_message['name_5'] = sensor_num5
+		while i<5:
+			new_num.insert(i, sensor_talk[i])
+			#python_message['data']['finger'] = new_num[i]
+			python_message['data'][i]['finger'] = new_num[i]
+			i = i+1
+
+		
+		#python_message['finger_1'] = new_num[0]
+		#python_message['finger_2'] = new_num[1]
+		#python_message['finger_3'] = new_num[2]
+		#python_message['finger_4'] = new_num[3]
+		#python_message['finger_5'] = new_num[4]
+
+		#python_message['name_1'] = sensor_num[0]
+		#python_message['name_2'] = sensor_num[1]
+		#python_message['name_3'] = sensor_num[2]
+		#python_message['name_4'] = sensor_num[3]
+		#python_message['name_5'] = sensor_num[4]
 		#파이썬에서 json 형식의 메시지를 바꾸기위해 json 형식을 python 형식으로 파싱하고 수정
 
 		myMQTTClient.publish(
@@ -125,11 +137,11 @@ def call_subscribe():
 
 def recv_message(self, topic, packet):
 	come_message = json.loads(packet.payload)
-	print("엄지", " : ", come_message['finger_1'])
-	print("검지", " : ", come_message['finger_2'])
-	print("중지", " : ", come_message['finger_3'])
-	print("약지", " : ", come_message['finger_4'])
-	print("새끼", " : ", come_message['finger_5'])
+	print("엄지", " : ", come_message['data'][0]['finger'])
+	print("검지", " : ", come_message['data'][1]['finger'])
+	print("중지", " : ", come_message['data'][2]['finger'])
+	print("약지", " : ", come_message['data'][3]['finger'])
+	print("새끼", " : ", come_message['data'][4]['finger'])
 	print("--------------------------------------------------------------------")
 	#위의 subscribe 메소드에 의해 실행될 함수
 	#topic에는 지정된 채팅방 이름이 저장됌
