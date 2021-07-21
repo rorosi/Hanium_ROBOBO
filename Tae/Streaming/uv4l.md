@@ -33,3 +33,5 @@
 #6. 웹에 접속 하기
 
 라즈베리파이 ip주소를 입력하여 외부에서 라즈베리파이 서버로 접속 : http://라즈베리파이IP:8080/stream/webrtc
+
+![KakaoTalk_20210721_194353304](/uploads/37b2ff96879ba9b0f7404d5edd5ac84b/KakaoTalk_20210721_194353304.jpg)
