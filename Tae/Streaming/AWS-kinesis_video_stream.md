@@ -43,8 +43,6 @@ gst-inspect-1.0 kvssink 해당 명령어를 실행하게 되면 아래와 같은
 
 빌드가 실패했거나 GST_PLUGIN_PATH제대로 설정되지 않은 경우 다음 과 같은 출력이 표시된다.
 
-위로 올라가서 잘못한 것이 없는 지 다시 한 번 확인
-
     No such element or plugin 'kvssink'
     
 성공적으로 완료가 되었다면
