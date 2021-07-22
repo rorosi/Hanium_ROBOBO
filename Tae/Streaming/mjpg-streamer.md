@@ -26,7 +26,7 @@
 
 ## 6. /dev/video0에 연결된 파이카메라로부터 캡처한 영상을 HTTP 포트 8000으로 스트리밍하도록 합니다. 
 
-    mjpg_streamer -i "input_raspicam.so -vf" -o "output_http.so -p 800 -w /usr/local/share/mjpg-streamer/www/"
+    mjpg_streamer -i "input_raspicam.so" -o "output_http.so -p 800 -w /usr/local/share/mjpg-streamer/www/"
 
 파이카메라가 아닌 웹캠을 사용할 시 input_raspicam.so 대신에 input_uvc.so를 사용해주면 된다.
 
