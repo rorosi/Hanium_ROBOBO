@@ -24,8 +24,20 @@ BLEIntCharacteristic FlexCharacteristic5("19B10005-E8F2-537E-4F6C-D104768A1214",
 
 void setup() {
   Serial.begin(9600);
+  
+  //서보모터 핀 및 초기 각도 설정
+  servothumb.attach(2);
   servoindex.attach(3);
+  servomiddle.attach(4);
+  servoringfinger.attach(5);
+  servopinky.attach(6);
+
+  servothumb.write(0);
   servoindex.write(0);
+  servomiddle.write(0);
+  servoringfinger.write(0);
+  servopinky.write(0);
+
   
   while (!Serial);
 
