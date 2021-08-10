@@ -1,6 +1,7 @@
 #include <Servo.h>
 #include <ArduinoBLE.h>
 
+//객체 및 핀 번호 변수 선언
 Servo servothumb;
 Servo servoindex;
 Servo servomiddle;
@@ -38,7 +39,6 @@ void setup() {
   servoringfinger.write(0);
   servopinky.write(0);
 
-  
   while (!Serial);
 
   // begin initialization
