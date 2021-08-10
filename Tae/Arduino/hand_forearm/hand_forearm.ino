@@ -10,17 +10,17 @@ Servo servopinky;
 
 //define the flex sensor input pins
 int flex_1 = A1;
-int flex_2 = A2; //약ㅈ거
-int flex_3 = A3; //중지
-int flex_4 = A4; //검지
-int flex_5 = A0;
+int flex_2 = A2; 
+int flex_3 = A3; 
+int flex_4 = A4; 
+int flex_5 = A5;
 
 //define variables for flex sensor values
-int flex_5_val;
-int flex_4_val;
-int flex_3_val;
-int flex_2_val;
 int flex_1_val;
+int flex_2_val;
+int flex_3_val;
+int flex_4_val;
+int flex_5_val;
 
 void setup() {
   Serial.begin(9600);
@@ -32,11 +32,11 @@ void setup() {
   servoringfinger.attach(5);
   servopinky.attach(6);
 
-  servothumb.write(90);
+  servothumb.write(0);
   servoindex.write(0);
   servomiddle.write(0);
-  servoringfinger.write(90);
-  servopinky.write(90);
+  servoringfinger.write(0);
+  servopinky.write(0);
 }
 
 void loop() {
