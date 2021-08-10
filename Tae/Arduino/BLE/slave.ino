@@ -2,12 +2,8 @@
 
 BLEService Service("19B10000-E8F2-537E-4F6C-D104768A1214"); // BLE Service
 
-// BLE LED Switch Characteristic - custom 128-bit UUID, read and writable by central
+// BLE Characteristic - custom 128-bit UUID, read and writable by central
 BLEIntCharacteristic FlexCharacteristic1("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
-BLEIntCharacteristic FlexCharacteristic2("19B10002-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
-BLEIntCharacteristic FlexCharacteristic3("19B10003-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
-BLEIntCharacteristic FlexCharacteristic4("19B10004-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
-BLEIntCharacteristic FlexCharacteristic5("19B10005-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
 
 
 void setup() {
@@ -28,11 +24,7 @@ void setup() {
   BLE.setAdvertisedService(Service);
 
   // 사전에 정의한 characteristic을 service에 추가한다.
-  Service.addCharacteristic(FlexCharacteristic1);
-  Service.addCharacteristic(FlexCharacteristic2);
-  Service.addCharacteristic(FlexCharacteristic3);
-  Service.addCharacteristic(FlexCharacteristic4);
-  Service.addCharacteristic(FlexCharacteristic5);
+  Service.addCharacteristic(FlexCharacteristic);
   
   // 이제 server를 BLE device에 등록한다.
   BLE.addService(Service);
@@ -58,23 +50,8 @@ void loop() {
 
     // while the central is still connected to peripheral:
     while (central.connected()) {
-        if (FlexCharacteristic1.value() && FlexCharacteristic2.value() && FlexCharacteristic3.value() &&
-        FlexCharacteristic4.value() && FlexCharacteristic5.value()) {   // any value other than 0
-          int data1 = FlexCharacteristic1.value();
-          int data2 = FlexCharacteristic2.value();
-          int data3 = FlexCharacteristic3.value();
-          int data4 = FlexCharacteristic4.value();
-          int data5 = FlexCharacteristic5.value();
-          Serial.println(data1);
-          delay(1000);
-          Serial.println(data2);
-          delay(1000);
-          Serial.println(data3);
-          delay(1000);
-          Serial.println(data4);
-          delay(1000);
-          Serial.println(data5);
-          delay(1000);
+        if (FlexCharacteristic.value()) {   // 전송된 값이 있다면
+          Serial.println(FlexCharacteristic.value());  // 값을 출력
         }
      }
 
