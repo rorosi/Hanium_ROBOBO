@@ -35,6 +35,10 @@ void loop() {
     Serial.print(peripheral.advertisedServiceUuid());
     Serial.println();
 
+    if (peripheral.localName() != "Arduino Nano 33 BLE (Peripheral)") {
+      return;
+    }
+    
     // stop scanning
     BLE.stopScan();
 
