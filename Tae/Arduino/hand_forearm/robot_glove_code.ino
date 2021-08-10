@@ -78,11 +78,11 @@ void controlLed(BLEDevice peripheral) {
     return;
   }
 
-  BLECharacteristic ledCharacteristic1 = peripheral.characteristic("19b10001-e8f2-537e-4f6c-d104768a1214");
-  BLECharacteristic ledCharacteristic2 = peripheral.characteristic("19b10002-e8f2-537e-4f6c-d104768a1214");
-  BLECharacteristic ledCharacteristic3 = peripheral.characteristic("19b10003-e8f2-537e-4f6c-d104768a1214");
-  BLECharacteristic ledCharacteristic4 = peripheral.characteristic("19b10004-e8f2-537e-4f6c-d104768a1214");
-  BLECharacteristic ledCharacteristic5 = peripheral.characteristic("19b10005-e8f2-537e-4f6c-d104768a1214");
+  BLECharacteristic flexCharacteristic1 = peripheral.characteristic("19b10001-e8f2-537e-4f6c-d104768a1214");
+  BLECharacteristic flexCharacteristic2 = peripheral.characteristic("19b10002-e8f2-537e-4f6c-d104768a1214");
+  BLECharacteristic flexCharacteristic3 = peripheral.characteristic("19b10003-e8f2-537e-4f6c-d104768a1214");
+  BLECharacteristic flexCharacteristic4 = peripheral.characteristic("19b10004-e8f2-537e-4f6c-d104768a1214");
+  BLECharacteristic flexCharacteristic5 = peripheral.characteristic("19b10005-e8f2-537e-4f6c-d104768a1214");
 
 
   
@@ -94,11 +94,11 @@ void controlLed(BLEDevice peripheral) {
     flex_5_val = analogRead(flex_5);
     
     // BLE 통신에서 넘겨주는 데이터 타입은 uint8_t이다. 정수나 실수를 그대로 넘겨줄 수 없기 때문에 받는 쪽에서는 적절한 캐스팅을 해줘야한다.
-    ledCharacteristic1.writeValue((byte)flex_1_val);
-    ledCharacteristic1.writeValue((byte)flex_2_val);
-    ledCharacteristic1.writeValue((byte)flex_3_val);
-    ledCharacteristic1.writeValue((byte)flex_4_val);
-    ledCharacteristic1.writeValue((byte)flex_5_val);
+    flexCharacteristic1.writeValue((byte)flex_1_val);
+    flexCharacteristic2.writeValue((byte)flex_2_val);
+    flexCharacteristic3.writeValue((byte)flex_3_val);
+    flexCharacteristic4.writeValue((byte)flex_4_val);
+    flexCharacteristic5.writeValue((byte)flex_5_val);
 
     }
 }
