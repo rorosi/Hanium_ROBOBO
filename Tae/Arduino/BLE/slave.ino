@@ -3,7 +3,7 @@
 BLEService Service("19B10000-E8F2-537E-4F6C-D104768A1214"); // BLE Service
 
 // BLE Characteristic - custom 128-bit UUID, read and writable by central
-BLEIntCharacteristic FlexCharacteristic1("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
+BLEIntCharacteristic FlexCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
 
 
 void setup() {
