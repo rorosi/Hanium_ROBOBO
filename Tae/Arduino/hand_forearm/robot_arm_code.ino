@@ -14,9 +14,9 @@ int flex_3_val;
 int flex_4_val;
 int flex_5_val;
 
-BLEService Service("19B10000-E8F2-537E-4F6C-D104768A1214"); // BLE Service
+BLEService Service("19B10000-E8F2-537E-4F6C-D104768A1214"); // BLE Service 설정
 
-// BLE LED Switch Characteristic - custom 128-bit UUID, read and writable by central
+
 BLEIntCharacteristic FlexCharacteristic1("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
 BLEIntCharacteristic FlexCharacteristic2("19B10002-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
 BLEIntCharacteristic FlexCharacteristic3("19B10003-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
@@ -41,7 +41,7 @@ void setup() {
 
   while (!Serial);
 
-  // begin initialization
+  // 초기화
   if (!BLE.begin()) {
     Serial.println("starting BLE failed!");
 
@@ -83,10 +83,9 @@ void loop() {
     // 연결된 central 디바이스의 MAC 주소를 출력
     Serial.println(central.address());
 
-    // while the central is still connected to peripheral:
     while (central.connected()) {
         if (FlexCharacteristic1.value() && FlexCharacteristic2.value() && FlexCharacteristic3.value() &&
-            FlexCharacteristic4.value() && FlexCharacteristic5.value()) {   // any value other than 0
+            FlexCharacteristic4.value() && FlexCharacteristic5.value()) {   // 넘어온 값이 있는 지 확인
           flex_1_val = FlexCharacteristic1.value();
           flex_1_val = map(flex_1_val,85,35,0,150);
           servothumb.write(flex_1_val);
