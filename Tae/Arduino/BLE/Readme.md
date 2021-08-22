@@ -12,4 +12,4 @@ NANO 33 BLE는 AVR 기반인 기존 아두이노와 다르게 ARM 기반의 제�
 
 ![3](/uploads/3a0a769e00cb533d50bfe85467a0f76f/3.png)
 
-설치가 끝나면 "Arduino NANO 33 BLE" 가 보드 선택 창에 나타난다. 보드를 선택한 후 포트 역시 선택해 준다.
+설치가 끝나면 "Arduino NANO 33 BLE" 가 보드 선택 창에 나타난다. 보드를 선택한 후 포트를 선택해 준다.
