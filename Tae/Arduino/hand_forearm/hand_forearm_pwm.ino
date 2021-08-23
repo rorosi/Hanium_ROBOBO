@@ -33,24 +33,24 @@ void setup() {
 }
 
 void loop() {
-    flex_1_val = analogRead(flex_1);
-    flex_2_val = analogRead(flex_2); 
-    flex_3_val = analogRead(flex_3); 
-    flex_4_val = analogRead(flex_4); 
-    flex_5_val = analogRead(flex_5);  
     
+    flex_1_val = analogRead(flex_1);
     flex_1_val = constrain(map(flex_1_val, 85, 35, 150, 450), 150, 450); //받은 값의 범위 0~180을 펄스길이150~600으로 매핑해주고, ra의 최소,최대를 150,600을 넘지 않게 해준다.
     pwm.setPWM(1,0,flex_1_val); //pca9685모듈의 0번 포트에 연결된 서보를 ra만큼 회전
-
+    
+    flex_2_val = analogRead(flex_2); 
     flex_2_val = constrain(map(flex_2_val, 85, 35, 150, 450), 150, 450); //받은 값의 범위 0~180을 펄스길이150~600으로 매핑해주고, ra의 최소,최대를 150,600을 넘지 않게 해준다.
     pwm.setPWM(2,0,flex_2_val); //pca9685모듈의 0번 포트에 연결된 서보를 ra만큼 회전
-
+    
+    flex_3_val = analogRead(flex_3); 
     flex_3_val = constrain(map(flex_3_val, 85, 35, 150, 450), 150, 450); //받은 값의 범위 0~180을 펄스길이150~600으로 매핑해주고, ra의 최소,최대를 150,600을 넘지 않게 해준다.
     pwm.setPWM(3,0,flex_3_val); //pca9685모듈의 0번 포트에 연결된 서보를 ra만큼 회전
-
+    
+    flex_4_val = analogRead(flex_4); 
     flex_4_val = constrain(map(flex_4_val, 85, 35, 150, 450), 150, 450); //받은 값의 범위 0~180을 펄스길이150~600으로 매핑해주고, ra의 최소,최대를 150,600을 넘지 않게 해준다.
     pwm.setPWM(4,0,flex_4_val); //pca9685모듈의 0번 포트에 연결된 서보를 ra만큼 회전
-
+    
+    flex_5_val = analogRead(flex_5); 
     flex_5_val = constrain(map(flex_5_val, 85, 35, 150, 450), 150, 450); //받은 값의 범위 0~180을 펄스길이150~600으로 매핑해주고, ra의 최소,최대를 150,600을 넘지 않게 해준다.
     pwm.setPWM(5,0,flex_5_val); //pca9685모듈의 0번 포트에 연결된 서보를 ra만큼 회전
     
