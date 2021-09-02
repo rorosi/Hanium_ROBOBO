@@ -69,6 +69,4 @@ gst-inspect-1.0 kvssink 해당 명령어를 실행하게 되면 아래와 같은
 
 https://aws-samples.github.io/amazon-kinesis-video-streams-media-viewer/
 
-![1](/uploads/2d2b21eada5050712c6746754ae039ab/1.png)
-
 
