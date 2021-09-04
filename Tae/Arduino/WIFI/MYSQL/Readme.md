@@ -1,7 +1,6 @@
 # WiFi를 통해 MYSQL과 연동
 
 | MySQL_Connection                                           | MySQL에 접속할 때 사용하는 클래스                      |
-|------------------------------------------------------------|--------------------------------------------------------|
 | MySQL_Cursor                                               | MySQL에 접속할 인스턴스를 지정하는 클래스              |
 | (MySQL_Connection).connect(서버IP, 포트, 계정명, 비밀번호) | MySQL에 접속하는 함수 (boolean)                        |
 | (MySQL_Cursor)->execute(쿼리구문)                          | MySQL 구문을 실행(=전송)하는 함수 (boolean             |
