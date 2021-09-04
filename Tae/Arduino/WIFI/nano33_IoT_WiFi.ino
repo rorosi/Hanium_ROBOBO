@@ -1,8 +1,8 @@
 #include <SPI.h>
 #include <WiFiNINA.h>
 
-const char* ssid = "Test";        // WiFi의 SSID
-const char* pass = "12345678";     // WiFi의 비밀번호
+const char* ssid = "";        // WiFi의 SSID
+const char* pass = "";     // WiFi의 비밀번호
 int status = WL_IDLE_STATUS;
 
 void setup() {
