@@ -9,8 +9,8 @@ char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
 
 IPAddress server_addr(121, 173, 239, 121);    // IP of the MySQL *server* here
-char user[] = "arduino";              // MySQL user login username
-char password[] = "xowjd57!";        // MySQL user login password
+char user[] = "";              // MySQL user login username
+char password[] = "!";        // MySQL user login password
 char query[] = "SELECT number FROM arduino.info";
 
 int status = WL_IDLE_STATUS;
