@@ -4,18 +4,25 @@ import com.robobo.rbb_springboot.dto.SignUpRequestDto;
 import com.robobo.rbb_springboot.model.User;
 import com.robobo.rbb_springboot.model.UserRole;
 import com.robobo.rbb_springboot.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@RequiredArgsConstructor
+
 @Service
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private static final String ADMIN_TOKEN = "rbbbbb//oooo//12AVKKJEJ//SJCJEyidfkwwdxaas";
+
+
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+    }
 
     public void registerUser(SignUpRequestDto requestDto) {
         String username = requestDto.getUsername();
@@ -39,7 +46,13 @@ public class UserService {
             role = UserRole.ROLE_ADMIN;
         }
 
-        User user = new User(username, password, email, tel, role);
+        User user = User.builder()
+                .username(username)
+                .password(password)
+                .email(email)
+                .tel(tel)
+                .role(role)
+                .build();
         userRepository.save(user);
     }
 

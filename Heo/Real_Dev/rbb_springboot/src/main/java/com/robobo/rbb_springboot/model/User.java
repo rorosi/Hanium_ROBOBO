@@ -1,8 +1,8 @@
 package com.robobo.rbb_springboot.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -12,23 +12,17 @@ import javax.persistence.*;
 @Entity // DB 테이블 역할을 합니다.
 public class User extends Timestamped {
 
-    public User(String username, String password, String email, String tel, UserRole role) {
+    @Builder // 빌더 패턴 사용
+    public User(String username, String password, String email, String tel, UserRole role, String provider, String providerId) {
         this.username = username;
-        this.email = email;
         this.password = password;
+        this.email = email;
         this.tel = tel;
         this.role = role;
-        this.kakaoId = null;
+        this.provider = provider;
+        this.providerId = providerId;
     }
 
-    //카카오 로그인 할때 생성자
-//    public User(String username, String password, String email, UserRole role, Long kakaoId) {
-//        this.username = username;
-//        this.password = password;
-//        this.email = email;
-//        this.role = role;
-//        this.kakaoId = kakaoId;
-//    }
 
     // ID가 자동으로 생성 및 증가합니다.
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +46,10 @@ public class User extends Timestamped {
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
-    @Column(nullable = true)
-    private Long kakaoId;
+    @Column
+    private String provider;
+
+    @Column
+    private String providerId;
+
 }

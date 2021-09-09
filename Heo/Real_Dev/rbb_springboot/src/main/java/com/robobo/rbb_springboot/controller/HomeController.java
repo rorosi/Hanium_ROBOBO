@@ -1,13 +1,14 @@
 package com.robobo.rbb_springboot.controller;
 
 import com.robobo.rbb_springboot.security.auth.PrincipalDetails;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.security.Principal;
+
 
 @Controller
 public class HomeController {
@@ -18,15 +19,19 @@ public class HomeController {
             model.addAttribute("login",false);
         }
         else {
+
             model.addAttribute("login",true);
             model.addAttribute("username", principalDetails.getUsername());
+            System.out.println(principalDetails.getUser());
+
         }
         return "index";
     }
 
-    @GetMapping("/test")
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/admin")
     @ResponseBody
     public String test() {
-        return "test";
+        return "admin 테스트 페이지";
     }
 }

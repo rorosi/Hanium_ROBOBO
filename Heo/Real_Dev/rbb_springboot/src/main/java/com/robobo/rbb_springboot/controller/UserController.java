@@ -3,6 +3,7 @@ package com.robobo.rbb_springboot.controller;
 import com.robobo.rbb_springboot.dto.SignUpRequestDto;
 import com.robobo.rbb_springboot.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,11 +11,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
-@RequiredArgsConstructor
+
 @Controller
 public class UserController {
 
     private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     //로그인 페이지
     @GetMapping("/user/login")
