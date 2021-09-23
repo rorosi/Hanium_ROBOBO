@@ -1,14 +1,19 @@
 #include <ArduinoBLE.h>
 
-BLEService Service("19B10000-E8F2-537E-4F6C-D104768A1214");
+BLEService Service("19b10000-e8f2-537e-4f6c-d104768a1214");
 
-BLEUnsignedCharCharacteristic FlexChar("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead|BLEWrite|BLENotify);
+//BLEUnsignedCharCharacteristic FlexChar("19b10001-e8f2-537e-4f6c-d104768a1214", BLERead|BLEWrite|BLENotify);
+BLEStringCharacteristic FlexChar("19b10001-e8f2-537e-4f6c-d104768a1214", BLERead|BLEWrite, 20);
 
 byte read_data = 0;
-unsigned char write_data[] = "hello";
+String data = "mss daa ccc ddd";
+String data2 = "";
+int ch = 0;
+byte *temp = new byte[data.length()+1];
+
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   while(!Serial);
 
   if(!BLE.begin()){
@@ -24,6 +29,9 @@ void setup() {
   BLE.advertise();
   Serial.println("nano33 ble peripheral");
   Serial.println("");
+
+  data.getBytes(temp, data.length()+1);
+  
 }
 
 void loop(){
@@ -36,11 +44,12 @@ void loop(){
     Serial.println(central.address()); //MAC
 
     while(central.connected()){
-      if(FlexChar.written()){
-        read_data = FlexChar.value();
-        Serial.print((char)read_data);
-      }
-    }
+        data2 = data + " " + ch;
+        FlexChar.writeValue(data2);
+        Serial.println(data2);
+        ch++;
+        delay(250);
+     }
   }
 
   else{
