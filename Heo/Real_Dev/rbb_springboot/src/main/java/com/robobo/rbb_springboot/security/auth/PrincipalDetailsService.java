@@ -18,6 +18,7 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+
     @Autowired
     public PrincipalDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -25,9 +26,16 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     // 매개변수 받는 username 잘 맞춰줘야함
     // 시큐리티 session (내부 Authentication (내부 UserDetails))
+    /**
+     * Spring Security 필수 메소드 구현
+     *
+     * param email 이메일
+     * return UserDetails
+     * throws UsernameNotFoundException 유저가 없을 때 예외 발생
+     */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElse(null);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email).orElse(null);
 
         // null 값이 아니면 실행
         if(user != null) {
