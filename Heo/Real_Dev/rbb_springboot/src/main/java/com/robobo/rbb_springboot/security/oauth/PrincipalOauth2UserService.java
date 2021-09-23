@@ -44,13 +44,13 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         //회원가입을 강제로(자동으로) 진행
         String provider = userRequest.getClientRegistration().getClientId(); // google
         String providerId = oAuth2User.getAttribute("sub"); // 1023231~~~
-        String username = provider+"_"+providerId; // google_1023231~~~~ 중복을 제거하기 위해서 (페이스북도 할거라)
+        String username = oAuth2User.getAttribute("name");
         String password = passwordEncoder.encode("비밀번호");
 
         String email = oAuth2User.getAttribute("email");
         UserRole role = UserRole.ROLE_USER;
 
-        User user = userRepository.findByUsername(username).orElse(null);
+        User user = userRepository.findByEmail(email).orElse(null);
 
         if (user == null) {
             user = User.builder()

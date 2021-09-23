@@ -25,17 +25,17 @@ public class UserService {
     }
 
     public void registerUser(SignUpRequestDto requestDto) {
-        String username = requestDto.getUsername();
+        String email = requestDto.getEmail();
         // 회원 ID 중복 확인
-        Optional<User> found = userRepository.findByUsername(username);
+        Optional<User> found = userRepository.findByEmail(email);
         if (found.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자 ID 가 존재합니다.");
+            throw new IllegalArgumentException("중복된 사용자 ID(이메일) 가 존재합니다.");
         }
-
+        String username = requestDto.getUsername();
         // 패스워드 인코딩
         String password = passwordEncoder.encode(requestDto.getPassword());
 
-        String email = requestDto.getEmail();
+
         String tel = requestDto.getTel();
         // 사용자 ROLE 확인
         UserRole role = UserRole.ROLE_USER;

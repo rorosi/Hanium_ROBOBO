@@ -52,7 +52,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .and()
                     .formLogin()
                         .loginPage("/user/login") // 인증 안돼있으면 로그인페이지로 이동
-
                         //시큐리티가 로그인프로세스 낚아챔 컨트롤러에 안만들어도된다.
                         .loginProcessingUrl("/user/loginProcess")
 
@@ -61,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .permitAll() // 모든 사용자에게 허용
                         .and()
                     .logout()
+                        .logoutSuccessUrl("/")
                         .permitAll()
                         .and()
                     .exceptionHandling()
