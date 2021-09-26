@@ -2,10 +2,10 @@
 #include <WiFiNINA.h>
 #include <PubSubClient.h>
 
-const char* ssid = "Test";        // WiFi의 SSID
-const char* pass = "12345678";     // WiFi의 비밀번호
-const char* mqtt_server = "121.173.239.42";
-
+const char* ssid = "";        // WiFi의 SSID
+const char* pass = "";     // WiFi의 비밀번호
+const char* mqtt_server = ""; // MQTT Broker 주소
+ 
 int status = WL_IDLE_STATUS;
 
 WiFiClient n_client;
