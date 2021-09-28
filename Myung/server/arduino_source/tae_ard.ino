@@ -3,13 +3,15 @@
 BLEService Service("19c10000-e8f2-537e-4f6c-d104768a1214");
 
 //BLEUnsignedCharCharacteristic FlexChar("19b10001-e8f2-537e-4f6c-d104768a1214", BLERead|BLEWrite|BLENotify);
-BLEStringCharacteristic FlexChar("19c10001-e8f2-537e-4f6c-d104768a1214", BLERead|BLEWrite, 50);
+BLEStringCharacteristic FlexChar("19c10001-e8f2-537e-4f6c-d104768a1214", BLERead|BLEWrite, 30);
 
 byte read_data = 0;
 String data = "mss daa ccc ddd";
 String data2 = "";
 int ch = 0;
 
+byte h;
+byte hh[20];
 
 
 void setup() {
@@ -42,12 +44,12 @@ void loop(){
     Serial.println(central.address()); //MAC
 
     while(central.connected()){
-        data2 = FlexChar.value();
-        Serial.println(data2);
-        delay(250);
-     }
-  }
 
+        FlexChar.readValue(h);
+        Serial.println(h);
+      
+    }
+  }
   else{
     Serial.print(F("disconn from central"));
     Serial.println(central.address());
