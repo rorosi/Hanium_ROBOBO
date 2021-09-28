@@ -3,11 +3,11 @@ import json
 import serial
 from multiprocessing import Process, Queue
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
-
-from bluetooth import *
 from bluepy import btle
 from signal import signal, SIGPIPE, SIG_DFL
 
+old_data = ""
+a=b'11'
 
 def conn_aws(client_name):
 	
@@ -33,10 +33,6 @@ def conn_aws(client_name):
 
 def send_to_ard():
 	myAWS = conn_aws("write_client")
-	global MAC
-	global SERVICE_UUID
-	global CHARACTERISTIC_UUID
-	global dev
 
 
 
@@ -67,7 +63,7 @@ def send_to_ard():
 			if e.errno == errno.EPIPE:
 				signal(SIGPIPE, SIG_DFL)
 			print('에러발생 : ', e)
-			time.sleep(0.5)
+			time.sleep(1)
 			dev.disconnect()
 			service_uuid = btle.UUID(SERVICE_UUID)
 			service = dev.getServiceByUUID(service_uuid)
@@ -81,30 +77,19 @@ def send_to_ard():
 			pass
 
 def recv_message_to_ard(self, topic, packet):
-
-	ard_client = myARD
+	global old_data
 	come_message = json.loads(packet.payload)
-
-	sensor_data = come_message['data'][0]['finger']+" "+come_message['data'][1]['finger']+" "+come_message['data'][2]['finger']+" "+come_message['data'][3]['finger']+" "+come_message['data'][4]['finger']+"\n"
 	
-	sensor_data = str(sensor_data)
+	sensor_data = str(come_message['data'][0]['finger'])+" "+str(come_message['data'][1]['finger'])+" "+str(come_message['data'][2]['finger'])+" "+str(come_message['data'][3]['finger'])+" "+str(come_message['data'][4]['finger'])
 
-	nano.write(sensor_data.encode())
-	print(sensor_data.encode())
+	if(sensor_data != old_data):
+		#nano.write(bytes(sensor_data, encoding='utf-8'))
+		nano.write(a)
+		old_data = sensor_data
+		print(sensor_data)
 
-
-def call_subscribe():
-	myAWS = conn_aws("read_client")
-	while True:
-		myAWS.subscribe("server/client", 1, recv_message_test) #read
-
-def recv_message_test(self, topic, packet):
-	come_message = json.loads(packet.payload)
-	print("엄지 : ", come_message['finger_1'])
-	print("검지 : ", come_message['finger_2'])
-	print("약지 : ", come_message['finger_3'])
-
-	#read #라즈베리파이에 메시지가 잘오는지 검사하기 위한 것
+	else:
+		old_data = sensor_data
 
 	
 
@@ -126,6 +111,7 @@ if __name__ == '__main__':
 	proc1 = Process(target=send_to_ard)
 	procs.append(proc1)
 	proc1.start()
+
 
 	#proc2 = Process(target=call_subscribe)
 	#procs.append(proc2)
