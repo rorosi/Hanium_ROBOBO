@@ -30,7 +30,6 @@ void setup() {
   Serial.println("nano33 ble peripheral");
   Serial.println("");
 
-  data.getBytes(temp, data.length()+1);
   
 }
 
