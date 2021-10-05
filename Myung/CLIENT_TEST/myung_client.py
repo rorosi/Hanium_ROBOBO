@@ -9,6 +9,12 @@ from signal import signal, SIGPIPE, SIG_DFL
 old_data = ""
 a=b'11'
 
+old_data=""
+sensor_data2=""
+sensor_data=""
+
+
+
 def conn_aws(client_name):
 	
 	if client_name == "write_client":
@@ -32,6 +38,11 @@ def conn_aws(client_name):
 
 
 def send_to_ard():
+
+	global old_data
+	global sensor_data2
+	global sensor_data
+
 	myAWS = conn_aws("write_client")
 
 
@@ -51,12 +62,17 @@ def send_to_ard():
 		if(char.uuid == CHARACTERISTIC_UUID):
 			print('==== UUID match ====')
 			print(char)
-			global nano
 			nano = char
 
 	while True:
 		try:
 			myAWS.subscribe("server/client", 1, recv_message_to_ard)
+			if(sensor_data != old_data):
+				nano.write(sensor_data2)
+				print(sensor_data2)
+
+			
+			old_data = sensor_data2
 
 
 		except Exception as e:
@@ -77,19 +93,14 @@ def send_to_ard():
 			pass
 
 def recv_message_to_ard(self, topic, packet):
-	global old_data
+	global sensor_data
+	global sensor_data2
 	come_message = json.loads(packet.payload)
 	
-	sensor_data = str(come_message['data'][0]['finger'])+" "+str(come_message['data'][1]['finger'])+" "+str(come_message['data'][2]['finger'])+" "+str(come_message['data'][3]['finger'])+" "+str(come_message['data'][4]['finger'])
+	sensor_data = str(come_message['data'][0]['finger'])+" "+str(come_message['data'][1]['finger'])+" "+str(come_message['data'][2]['finger'])+" "+str(come_message['data'][3]['finger'])+" "+str(come_message['data'][4]['finger'])+"\n"
+	sensor_data2 = bytes(sensor_data, 'utf-8')
 
-	if(sensor_data != old_data):
-		#nano.write(bytes(sensor_data, encoding='utf-8'))
-		nano.write(a)
-		old_data = sensor_data
-		print(sensor_data)
 
-	else:
-		old_data = sensor_data
 
 	
 
