@@ -3,7 +3,7 @@
 BLEService Service("19c10000-e8f2-537e-4f6c-d104768a1214");
 
 //BLEUnsignedCharCharacteristic FlexChar("19b10001-e8f2-537e-4f6c-d104768a1214", BLERead|BLEWrite|BLENotify);
-BLEStringCharacteristic FlexChar("19c10001-e8f2-537e-4f6c-d104768a1214", BLERead|BLEWrite, 30);
+BLEByteCharacteristic FlexChar("19c10001-e8f2-537e-4f6c-d104768a1214", BLERead|BLEWrite|BLENotify);
 
 byte read_data = 0;
 String data = "mss daa ccc ddd";
@@ -30,7 +30,7 @@ void setup() {
 
   BLE.advertise();
   Serial.println("nano33 ble peripheral");
-  Serial.println("");
+  Serial.println(BLE.address());
 
 }
 
@@ -44,10 +44,9 @@ void loop(){
     Serial.println(central.address()); //MAC
 
     while(central.connected()){
-
-        FlexChar.readValue(h);
-        Serial.println(h);
-      
+        byte charValue = FlexChar.value();
+        String aa = (String)charValue;
+        Serial.println(charValue);
     }
   }
   else{
