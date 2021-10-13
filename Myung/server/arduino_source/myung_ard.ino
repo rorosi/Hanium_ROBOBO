@@ -16,11 +16,11 @@ String fin3 = "";
 String fin4 = "";
 String fin5 = "";
 
-int flex_1 = A1;
-int flex_2 = A2;
-int flex_3 = A3;
-int flex_4 = A4;
-int flex_5 = A5;
+int flex_1 = A0;
+int flex_2 = A1;
+int flex_3 = A2;
+int flex_4 = A3;
+int flex_5 = A4;
 
 int flex_1_val;
 int flex_2_val;
@@ -48,7 +48,7 @@ void setup() {
 
   BLE.advertise();
   Serial.println("nano33 ble peripheral");
-  Serial.println("");
+  Serial.println(BLE.address());
 
   
 }
@@ -87,7 +87,7 @@ void loop(){
       data = fin1+" "+fin2+" "+fin3+" "+fin4+" "+fin5;
       sum = flex_1_val + flex_2_val + flex_3_val + flex_4_val + flex_5_val;
 
-      if(abs(sum - old)>3){
+      if(abs(sum - old)>2){
         FlexChar.writeValue(data);
         Serial.println(data);        
         old = sum;
@@ -101,10 +101,8 @@ void loop(){
           Serial.println(data);
           count = 0;
         }
-        delay(10);
+        delay(100);
       }
-      
-      delay(200);
      }
   }
 
