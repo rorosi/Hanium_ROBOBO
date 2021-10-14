@@ -72,39 +72,59 @@ void loop(){
         if(current - prev1 >= delay_time){
           fin1 = char1.value().toInt();
           prev1 = current;
+          if(abs(fin1 - old1)>0){
+            Serial.println(fin1);
+            old1 = fin1;  
+          }
         }
 
         if(current - prev2 >= delay_time+1){
           fin2 = char2.value().toInt();
           prev2 = current;  
+          if(abs(fin2 - old2)>0){
+            //Serial.println(fin2);
+            old2 = fin2;  
+          }
         }
 
         if(current - prev3 >= delay_time+2){
           fin3 = char3.value().toInt();
-          prev3 = current;  
+          prev3 = current; 
+          if(abs(fin3 - old3)>0){
+            //Serial.println(fin3);
+            old3 = fin3;  
+          }
         }
         
         if(current - prev4 >= delay_time+3){
           fin4 = char4.value().toInt();
-          prev4 = current;  
+          prev4 = current; 
+          if(abs(fin4 - old4)>0){
+            //Serial.println(fin4);
+            old4 = fin4;  
+          } 
         }
 
-        if(current - prev4 >= delay_time+4){
+        if(current - prev5 >= delay_time+4){
           fin5 = char5.value().toInt();
           prev5 = current;  
+          if(abs(fin5 - old5)>0){
+            //Serial.println(fin5);
+            old5 = fin5;  
+          }
         }
         
 
-        Serial.print(fin1);
-        Serial.print(" ");
-        Serial.print(fin2);
-        Serial.print(" ");
-        Serial.print(fin3);
-        Serial.print(" ");
-        Serial.print(fin4);
-        Serial.print(" ");
-        Serial.println(fin5);
-        delay(10);
+//        Serial.print(fin1);
+//        Serial.print(" ");
+//        Serial.print(fin2);
+//        Serial.print(" ");
+//        Serial.print(fin3);
+//        Serial.print(" ");
+//        Serial.print(fin4);
+//        Serial.print(" ");
+//        Serial.println(fin5);
+        delay(100);
     }
   }
   else{
