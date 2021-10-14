@@ -22,6 +22,12 @@ int flex_3_val;
 int flex_4_val;
 int flex_5_val;
 
+int old_1_val = 0;
+int old_2_val = 0;
+int old_3_val = 0;
+int old_4_val = 0;
+int old_5_val = 0;
+
 unsigned long prev1 = 0;
 unsigned long prev2 = 0;
 unsigned long prev3 = 0;
@@ -68,45 +74,59 @@ void loop(){
 
       if(current - prev1 >= delay_time){
         flex_1_val = int(analogRead(flex_1));
-        //flex_1_val = map(flex_1_val, 0, 800, 10, 99);
+        flex_1_val = map(flex_1_val, 0, 1023, 0, 100);
         prev1 = current;
-
-        fin_1.writeValue(String(flex_1_val));
+        if(abs(flex_1_val - old_1_val)>1){
+          fin_1.writeValue(String(flex_1_val));
+          old_1_val = flex_1_val;  
+        }
+        
       }
 
       if(current - prev2 >= delay_time+1){
         flex_2_val = int(analogRead(flex_2));
-        //flex_2_val = map(flex_2_val, 0, 800, 10, 99);
+        flex_2_val = map(flex_2_val, 0, 1023, 0, 100);
         prev2 = current;
 
-        fin_2.writeValue(String(flex_2_val));
+        if(abs(flex_2_val - old_2_val)>1){
+          fin_2.writeValue(String(flex_2_val));
+          old_2_val = flex_2_val;  
+        }        
       }
 
       if(current - prev3 >= delay_time+2){
         flex_3_val = int(analogRead(flex_3));
-        //flex_3_val = map(flex_3_val, 0, 800, 10, 99);
+        flex_3_val = map(flex_3_val, 0, 1023, 0, 100);
         prev3 = current;
-
-        fin_3.writeValue(String(flex_3_val));
+        
+        if(abs(flex_3_val - old_3_val)>1){
+          fin_3.writeValue(String(flex_3_val));
+          old_3_val = flex_3_val;  
+        }
       }
       
       if(current - prev4 >= delay_time+3){
         flex_4_val = int(analogRead(flex_4));
-        //flex_4_val = map(flex_4_val, 0, 800, 10, 99);
+        flex_4_val = map(flex_4_val, 0, 1023, 0, 100);
         prev4 = current;
-
-        fin_4.writeValue(String(flex_4_val));
+        
+        if(abs(flex_4_val - old_4_val)>1){
+          fin_4.writeValue(String(flex_4_val));
+          old_4_val = flex_4_val;  
+        }
       }
       
       if(current - prev5 >= delay_time+4){
         flex_5_val = int(analogRead(flex_5));
-        //flex_5_val = map(flex_5_val, 0, 800, 10, 99);
+        flex_5_val = map(flex_5_val, 0, 1023, 0, 100);
         prev5 = current;
 
-        fin_5.writeValue(String(flex_5_val));
+        if(abs(flex_5_val - old_5_val)>1){
+          fin_5.writeValue(String(flex_5_val));
+          old_5_val = flex_5_val;  
+        }
       }
-
-      delay(10);
+      delay(50);
      }
   }
 
