@@ -12,16 +12,24 @@ BLEStringCharacteristic char5("19c10001-e8f2-537e-4f6c-d104768a5555", BLERead|BL
 Servo servo;
 
 int servopin = 5;
+String data = "";
 
-
-byte read_data = 0;
-String data = "mss daa ccc ddd";
-String data2 = "";
-int ch = 0;
 
 int fin1, fin2, fin3, fin4, fin5;
-int old_sum = 0;
 
+int old1 = 0;
+int old2 = 0;
+int old3 = 0;
+int old4 = 0;
+int old5 = 0;
+
+unsigned long prev1 = 0;
+unsigned long prev2 = 0;
+unsigned long prev3 = 0;
+unsigned long prev4 = 0;
+unsigned long prev5 = 0;
+
+int delay_time = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -59,13 +67,33 @@ void loop(){
     Serial.println(central.address()); //MAC
 
     while(central.connected()){
-        fin1 = char1.value().toInt();
-        fin2 = char2.value().toInt();
-        fin3 = char3.value().toInt();
-        fin4 = char4.value().toInt();
-        fin5 = char5.value().toInt();
+        unsigned long current = millis();
 
-        int sum_data = fin1 + fin2 + fin3 + fin4 + fin5;
+        if(current - prev1 >= delay_time){
+          fin1 = char1.value().toInt();
+          prev1 = current;
+        }
+
+        if(current - prev2 >= delay_time+1){
+          fin2 = char2.value().toInt();
+          prev2 = current;  
+        }
+
+        if(current - prev3 >= delay_time+2){
+          fin3 = char3.value().toInt();
+          prev3 = current;  
+        }
+        
+        if(current - prev4 >= delay_time+3){
+          fin4 = char4.value().toInt();
+          prev4 = current;  
+        }
+
+        if(current - prev4 >= delay_time+4){
+          fin5 = char5.value().toInt();
+          prev5 = current;  
+        }
+        
 
         Serial.print(fin1);
         Serial.print(" ");
@@ -76,6 +104,7 @@ void loop(){
         Serial.print(fin4);
         Serial.print(" ");
         Serial.println(fin5);
+        delay(10);
     }
   }
   else{
