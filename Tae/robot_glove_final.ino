@@ -4,9 +4,9 @@
 
 char ap_ssid[] = "test";        // AP모드의 SSID
 char ap_pass[] = "12345678";        // AP모드의 PASS
-char st_ssid[] = "Test";        // ST모드의 SSID
-char st_pass[] = "12345678";        // ST모드의 PASS
-const char* mqtt_server = "211.216.136.70"; // MQTT Broker 주소
+char st_ssid[] = "myung";        // ST모드의 SSID
+char st_pass[] = "31963196";        // ST모드의 PASS
+const char* mqtt_server = "192.168.0.8"; // MQTT Broker 주소
  
 int status = WL_IDLE_STATUS;
 
@@ -143,10 +143,10 @@ void reconnect() {
       Serial.println("connected");
 
       // Once connected, publish an announcement...
-      client.publish("OutTopic", "test msg");
+      client.publish("connect", "test msg");
        
       // ... and resubscribe
-      client.subscribe("OUT");
+      client.subscribe("send");
        
     } else {
       Serial.print("failed, rc=");
