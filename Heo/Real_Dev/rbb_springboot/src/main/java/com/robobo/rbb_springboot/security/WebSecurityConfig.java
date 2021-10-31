@@ -23,16 +23,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public WebSecurityConfig(PrincipalOauth2UserService principalOauth2UserService) {
         this.principalOauth2UserService = principalOauth2UserService;
     }
-    // 패스워드 암호화 하기위해 Bean 등록 (DI 사용)
-    @Bean
-    public PasswordEncoder encodePassword() {
-        return new BCryptPasswordEncoder();
-    }
-
-
-
-
-
 
 
     @Override

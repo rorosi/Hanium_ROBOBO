@@ -23,7 +23,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     private final PasswordEncoder passwordEncoder;
 
 
-    public PrincipalOauth2UserService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder) {
+    public PrincipalOauth2UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

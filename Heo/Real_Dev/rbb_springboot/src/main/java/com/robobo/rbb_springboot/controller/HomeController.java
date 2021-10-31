@@ -34,4 +34,19 @@ public class HomeController {
     public String test() {
         return "admin 테스트 페이지";
     }
+
+    @GetMapping("/streaming")
+    public String streaming(Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        if (principalDetails == null) {
+            model.addAttribute("login",false);
+        }
+        else {
+
+            model.addAttribute("login",true);
+            model.addAttribute("username", principalDetails.getUsername());
+            System.out.println(principalDetails.getUser());
+
+        }
+        return "streaming";
+    }
 }
