@@ -41,13 +41,21 @@ void setup() {
 
   Serial.println("공유기와 와이파이 연결은 잘 됩니다.");
   printWifiStatus();
+
+
+  client.setServer(mqtt_server, 1883); // MQTT 서버에 연결합니다.
+  client.setCallback(callback);
   switch2WiFiMode(); 
   wifiAPMode();
+
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
 }
 
 void wifiAPMode()
@@ -106,6 +114,19 @@ void sendToData(){
 }
 
 
+
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  // Topic에 메시지가 도착하면 실행되는 콜백입니다.
+  n_client.write(payload, 5);
+  
+}
+
+
+
+
+
+
 void printWifiStatus() {
   // print the SSID of the network you're attached to:
   Serial.print("SSID: ");
@@ -121,4 +142,17 @@ void printWifiStatus() {
   Serial.print("signal strength (RSSI):");
   Serial.print(rssi);
   Serial.println(" dBm");
+}
+
+
+void reconnect() {
+  while (!client.connected()) {
+    String clientId = "ArduinoNANO33IoTClinet-"; // 클라이언트 ID를 설정합니다.
+    clientId += String(random(0xffff), HEX); // 같은 이름을 가진 클라이언트가 발생하는것을 방지하기 위해, 렌덤 문자를 클라이언트 ID에 붙입니다.
+    if (client.connect(clientId.c_str())) { // 앞서 설정한 클라이언트 ID로 연결합니다.
+      client.subscribe("inTopic"); // inTopic 토픽을 듣습니다.
+    } else {
+      delay(5000);
+    }
+  }
 }
