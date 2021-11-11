@@ -71,7 +71,7 @@ void loop() {
     Serial.print(flex_4_val);
     Serial.print(" ");
     Serial.print(flex_5_val);
-    Serial.print(" ");
+    Serial.println(" ");
   }
 }
 
