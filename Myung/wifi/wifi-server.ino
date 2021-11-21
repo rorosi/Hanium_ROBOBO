@@ -2,17 +2,21 @@
 #include <WiFiNINA.h>
 #include <PubSubClient.h>
 
+#include <WizFi250.h>
+
 char ap_ssid[] = "test";        // AP모드의 SSID
 char ap_pass[] = "12345678";        // AP모드의 PASS
-char st_ssid[] = "myung";        // ST모드의 SSID
-char st_pass[] = "31963196";        // ST모드의 PASS
-const char* mqtt_server = "192.168.0.8"; // MQTT Broker 주소
+char st_ssid[] = "Myung_2.4G";        // ST모드의 SSID
+char st_pass[] = "dlaudgus1!";        // ST모드의 PASS
+const char* mqtt_server = "broker.mqtt-dashboard.com"; // MQTT Broker 주소, 오픈 borker 주소.
  
 int status = WL_IDLE_STATUS;
 
 WiFiServer server(80);
 WiFiClient n_client;
 PubSubClient client(n_client);
+
+String msg = "";
 
 void setup() {
   // put your setup code here, to run once:
@@ -118,7 +122,14 @@ void sendToData(){
 
 void callback(char* topic, byte* payload, unsigned int length) {
   // Topic에 메시지가 도착하면 실행되는 콜백입니다.
-  n_client.write(payload, 5);
+  Serial.print(topic);
+  Serial.print(" ");
+  for (int i = 0; i < length; i++) {
+    msg +=(char)payload[i];
+  }
+  Serial.print(msg);
+  Serial.println();
+
   
 }
 
