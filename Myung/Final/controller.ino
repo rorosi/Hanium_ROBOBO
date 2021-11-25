@@ -111,7 +111,7 @@ void sendToData(){
     if (n_client) {                             // 로봇 팔측 Client 접속했다면
       Serial.println("로봇팔이 접속했다.");           // 연결되었다고 시리얼 모니터에 띄움
       Serial.println("3초간 손을 펴시오");
-      delay(1800);
+      delay(3000);
       int max0 = analogRead(A0);
       int max1 = analogRead(A1);
       int max2 = analogRead(A2);
@@ -131,7 +131,7 @@ void sendToData(){
       delay(1000);
 
       Serial.println("3초간 주먹 쥐시오");
-      delay(1800);
+      delay(3000);
       int min0 = analogRead(A0);
       int min1 = analogRead(A1);
       int min2 = analogRead(A2);
@@ -157,11 +157,11 @@ void sendToData(){
         fin[3] = analogRead(A3);
         fin[4] = analogRead(A6);
 
-        fin[0] = map(fin[0], min0, max0, 0, 150);
-        fin[1] = map(fin[1], min1, max1, 0, 150);
-        fin[2] = map(fin[2], min2, max2, 0, 150);
-        fin[3] = map(fin[3], min3, max3, 0, 150);
-        fin[4] = map(fin[4], min4, max4, 0, 150);
+        fin[0] = constrain(map(fin[0], min0, max0, 0, 150), 0, 150);
+        fin[1] = constrain(map(fin[1], min1, max1, 0, 150), 0, 150);
+        fin[2] = constrain(map(fin[2], min2, max2, 0, 150), 0, 150);
+        fin[3] = constrain(map(fin[3], min3, max3, 0, 150), 0, 150);
+        fin[4] = constrain(map(fin[4], max4, min4, 0, 150), 0, 150);
 
         int gy_1;
         int gy_2;
@@ -170,6 +170,8 @@ void sendToData(){
           b_val[i] = fin[i];
         }
         n_client.write(b_val,5);
+
+        delay(150);
       }
     }
   }
