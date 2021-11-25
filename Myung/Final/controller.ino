@@ -23,7 +23,7 @@ int fin[5];
 
 void setup() {
   // put your setup code here, to run once:
-  dohang_count="0";
+  
   Serial.begin(9600);
   while (!Serial) {;}
                   
@@ -55,7 +55,7 @@ void setup() {
   client.setCallback(callback);
   reconnect();
   Serial.println("mqtt 접속 대기");
-  
+  dohang_count="0";
 }
 
 void loop() {
@@ -98,6 +98,7 @@ void wifiAPMode()
     }
   }
   server.begin();
+  Serial.println("로봇팔 접속 대기");
   sendToData();
 }
 
@@ -106,17 +107,61 @@ void wifiAPMode()
 
 void sendToData(){
   while(true){
-    Serial.println("로봇팔 접속 대기");
     n_client = server.available();   // 로봇 팔 Client의 접속을 기다림   
-    delay(100);
     if (n_client) {                             // 로봇 팔측 Client 접속했다면
       Serial.println("로봇팔이 접속했다.");           // 연결되었다고 시리얼 모니터에 띄움
+      Serial.println("3초간 손을 펴시오");
+      delay(1800);
+      int max0 = analogRead(A0);
+      int max1 = analogRead(A1);
+      int max2 = analogRead(A2);
+      int max3 = analogRead(A3);
+      int max4 = analogRead(A6);
+      delay(300);
+      Serial.print(max0);
+      Serial.print(" ");
+      Serial.print(max1);
+      Serial.print(" ");
+      Serial.print(max2);
+      Serial.print(" ");
+      Serial.print(max3);
+      Serial.print(" ");
+      Serial.println(max4);
+      
+      delay(1000);
+
+      Serial.println("3초간 주먹 쥐시오");
+      delay(1800);
+      int min0 = analogRead(A0);
+      int min1 = analogRead(A1);
+      int min2 = analogRead(A2);
+      int min3 = analogRead(A3);
+      int min4 = analogRead(A6);
+      delay(300);
+      Serial.print(min0);
+      Serial.print(" ");
+      Serial.print(min1);
+      Serial.print(" ");
+      Serial.print(min2);
+      Serial.print(" ");
+      Serial.print(min3);
+      Serial.print(" ");
+      Serial.println(min4);
+      
+      delay(1000);
+      
       while (n_client.connected()) {            // 로봇 팔에 데이터를 전송
         fin[0] = analogRead(A0);
         fin[1] = analogRead(A1);
         fin[2] = analogRead(A2);
         fin[3] = analogRead(A3);
         fin[4] = analogRead(A6);
+
+        fin[0] = map(fin[0], min0, max0, 0, 150);
+        fin[1] = map(fin[1], min1, max1, 0, 150);
+        fin[2] = map(fin[2], min2, max2, 0, 150);
+        fin[3] = map(fin[3], min3, max3, 0, 150);
+        fin[4] = map(fin[4], min4, max4, 0, 150);
 
         int gy_1;
         int gy_2;
@@ -173,7 +218,7 @@ void reconnect() {
     String clientId = "ArduinoNANO33IoTClinet-"; // 클라이언트 ID를 설정합니다.
     clientId += String(random(0xffff), HEX); // 같은 이름을 가진 클라이언트가 발생하는것을 방지하기 위해, 렌덤 문자를 클라이언트 ID에 붙입니다.
     if (client.connect(clientId.c_str())) { // 앞서 설정한 클라이언트 ID로 연결합니다.
-      client.subscribe("dohang_topic"); // inTopic 토픽을 듣습니다.
+      client.subscribe("dohang_topic2"); // inTopic 토픽을 듣습니다.
     } else {
       delay(5000);
     }
