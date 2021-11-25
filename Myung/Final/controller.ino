@@ -161,7 +161,7 @@ void sendToData(){
         fin[1] = constrain(map(fin[1], min1, max1, 0, 150), 0, 150);
         fin[2] = constrain(map(fin[2], min2, max2, 0, 150), 0, 150);
         fin[3] = constrain(map(fin[3], min3, max3, 0, 150), 0, 150);
-        fin[4] = constrain(map(fin[4], max4, min4, 0, 150), 0, 150);
+        fin[4] = fin[3];
 
         int gy_1;
         int gy_2;
