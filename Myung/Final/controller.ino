@@ -19,9 +19,10 @@ PubSubClient client(n_client);
 
 String msg = "";
 String dohang_count = "0";
-byte b_val[5] = {1, 2, 3, 4, 5};
+byte b_val[6] = {1, 2, 3, 4, 5, 6};
 
 int fin[5];
+int gy_x;
 
 
 void setup() {
@@ -31,13 +32,6 @@ void setup() {
   while (!Serial) {;}
   Wire.begin();
   delay(1000);
-
-  if(!mpu.setup(0x68)){
-    while(1){
-      Serial.println("자이로 센서 연결이 안됐어요");
-      delay(1000);
-    }
-  }
                   
   if (WiFi.status() == WL_NO_MODULE) {     
     Serial.println("Communication with WiFi module failed!");  
@@ -89,8 +83,9 @@ void wifiAPMode()
   // WiFi 드라이버 다시 초기화
   wiFiDrv.wifiDriverDeinit();
   wiFiDrv.wifiDriverInit();
-  
+  delay(100);
   status = WiFi.beginAP(ap_ssid, ap_pass);
+  Serial.println("로봇팔 접속 대기");
   if (status != WL_AP_LISTENING) {
     Serial.println("Creating access point failed");
     // don't continue
@@ -110,7 +105,6 @@ void wifiAPMode()
     }
   }
   server.begin();
-  Serial.println("로봇팔 접속 대기");
   sendToData();
 }
 
@@ -118,6 +112,16 @@ void wifiAPMode()
 
 
 void sendToData(){
+  if(!mpu.setup(0x68)){
+    while(1){
+      Serial.println("자이로 센서 연결이 안됐어요");
+      delay(1000);
+    }
+  }
+  else{
+    Serial.println("자이로 센서 연결 완료");
+  }
+  
   while(true){
     n_client = server.available();   // 로봇 팔 Client의 접속을 기다림   
     if (n_client) {                             // 로봇 팔측 Client 접속했다면
@@ -175,20 +179,17 @@ void sendToData(){
         fin[3] = constrain(map(fin[3], min3, max3, 0, 150), 0, 150);
         fin[4] = fin[3];
 
-        if(mpu.update()){
-          static uint32_t prev_ms = millis();
-          if(millis() > prev_ms + 25){
-            print_gyro();
-            prev_ms = millis();
-          }
-        }
+        gy_x = (int)mpu.getPitch();
+        gy_x = constrain(map(gy_x, 0, 90, 596, 1369), 596, 1369);
 
-        for(int i=0; i<sizeof(fin)/sizeof(fin[0]); i++){
+        for(int i=0; i<5; i++){
           b_val[i] = fin[i];
         }
-        n_client.write(b_val,5);
+        b_val[6] = gy_x;
+        
+        n_client.write(b_val,6);
 
-        delay(150);
+        delay(250);
       }
     }
   }
@@ -242,11 +243,4 @@ void reconnect() {
       delay(5000);
     }
   }
-}
-
-
-void print_gyro(){
-  int gy_x = (int)mpu.getPitch();
-  gy_x = constrain(map(gy_x, 0, 90, 596, 1369), 596, 1369);
-  Serial.println(gy_x);
 }
