@@ -1,6 +1,9 @@
 #include <SPI.h>
 #include <WiFiNINA.h>
 #include <PubSubClient.h>
+#include <MPU9250.h>
+
+MPU9250 mpu;
 
 char ap_ssid[] = "test";        // AP모드의 SSID
 char ap_pass[] = "12345678";        // AP모드의 PASS
@@ -24,8 +27,17 @@ int fin[5];
 void setup() {
   // put your setup code here, to run once:
   
-  Serial.begin(9600);
+  Serial.begin(115200);
   while (!Serial) {;}
+  Wire.begin();
+  delay(1000);
+
+  if(!mpu.setup(0x68)){
+    while(1){
+      Serial.println("자이로 센서 연결이 안됐어요");
+      delay(1000);
+    }
+  }
                   
   if (WiFi.status() == WL_NO_MODULE) {     
     Serial.println("Communication with WiFi module failed!");  
@@ -163,8 +175,13 @@ void sendToData(){
         fin[3] = constrain(map(fin[3], min3, max3, 0, 150), 0, 150);
         fin[4] = fin[3];
 
-        int gy_1;
-        int gy_2;
+        if(mpu.update()){
+          static uint32_t prev_ms = millis();
+          if(millis() > prev_ms + 25){
+            print_gyro();
+            prev_ms = millis();
+          }
+        }
 
         for(int i=0; i<sizeof(fin)/sizeof(fin[0]); i++){
           b_val[i] = fin[i];
@@ -225,4 +242,11 @@ void reconnect() {
       delay(5000);
     }
   }
+}
+
+
+void print_gyro(){
+  int gy_x = (int)mpu.getPitch();
+  gy_x = constrain(map(gy_x, 0, 90, 596, 1369), 596, 1369);
+  Serial.println(gy_x);
 }
