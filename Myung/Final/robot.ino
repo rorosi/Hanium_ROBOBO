@@ -62,9 +62,9 @@ void loop() {
 
     flex_5_val = client.read();
 
-    flex_6_val = client.read();
-
-    flex_7_val = client.read();
+//    flex_6_val = client.read();
+//
+//    flex_7_val = client.read();
 
     Serial.print(flex_1_val);
     Serial.print(" ");
@@ -76,9 +76,9 @@ void loop() {
     Serial.print(" ");
     Serial.print(flex_5_val);
     Serial.print(" ");
-    Serial.print(flex_6_val);
-    Serial.print(" ");
-    Serial.print(flex_7_val);
+//    Serial.print(flex_6_val);
+//    Serial.print(" ");
+//    Serial.print(flex_7_val);
     Serial.println(" ");
   }
 }
