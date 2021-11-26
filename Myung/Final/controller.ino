@@ -1,9 +1,7 @@
 #include <SPI.h>
 #include <WiFiNINA.h>
 #include <PubSubClient.h>
-#include <MPU9250.h>
-
-MPU9250 mpu;
+#include <Arduino_LSM9DS1.h>
 
 char ap_ssid[] = "test";        // AP모드의 SSID
 char ap_pass[] = "12345678";        // AP모드의 PASS
@@ -21,8 +19,10 @@ String msg = "";
 String dohang_count = "0";
 byte b_val[6] = {1, 2, 3, 4, 5, 6};
 
-int fin[5];
-int gy_x;
+int fin[7];
+float x, y, z;
+float max_x, max_y, max_z;
+float min_x, min_y, min_z;
 
 
 void setup() {
@@ -30,7 +30,10 @@ void setup() {
   
   Serial.begin(115200);
   while (!Serial) {;}
-  Wire.begin();
+  if (!IMU.begin()) {
+    Serial.println("Failed to initialize IMU!");
+    while (1);
+  }
   delay(1000);
                   
   if (WiFi.status() == WL_NO_MODULE) {     
@@ -112,16 +115,6 @@ void wifiAPMode()
 
 
 void sendToData(){
-  if(!mpu.setup(0x68)){
-    while(1){
-      Serial.println("자이로 센서 연결이 안됐어요");
-      delay(1000);
-    }
-  }
-  else{
-    Serial.println("자이로 센서 연결 완료");
-  }
-  
   while(true){
     n_client = server.available();   // 로봇 팔 Client의 접속을 기다림   
     if (n_client) {                             // 로봇 팔측 Client 접속했다면
@@ -163,8 +156,28 @@ void sendToData(){
       Serial.print(min3);
       Serial.print(" ");
       Serial.println(min4);
-      
       delay(1000);
+
+      Serial.println("3초간 손목을 가만히 있으시오");
+      delay(3000);
+      if (IMU.gyroscopeAvailable()) {
+        IMU.readGyroscope(min_x, min_y, min_z);
+        Serial.print(min_x);
+        Serial.print(" ");
+        Serial.println(min_y);
+      }
+      delay(1000);
+
+      Serial.println("3초간 손목을 돌려주시오");
+      delay(3000);
+      if (IMU.gyroscopeAvailable()) {
+        IMU.readGyroscope(max_x, max_y, max_z);
+        Serial.print(max_x);
+        Serial.print(" ");
+        Serial.println(max_y);
+      }
+      delay(1000);
+      
       
       while (n_client.connected()) {            // 로봇 팔에 데이터를 전송
         fin[0] = analogRead(A0);
@@ -179,15 +192,20 @@ void sendToData(){
         fin[3] = constrain(map(fin[3], min3, max3, 0, 150), 0, 150);
         fin[4] = fin[3];
 
-        gy_x = (int)mpu.getPitch();
-        gy_x = constrain(map(gy_x, 0, 90, 596, 1369), 596, 1369);
+        if (IMU.gyroscopeAvailable()) {
+          IMU.readGyroscope(x, y, z);
+        }
+        fin[5] = constrain(map(x, min_x, max_x, 0, 150), 0, 150);
+        fin[6] = constrain(map(y, min_y, max_y, 0, 150), 0, 150);
+        
 
         for(int i=0; i<5; i++){
           b_val[i] = fin[i];
         }
-        b_val[6] = gy_x;
+        b_val[5] = fin[5];
+        b_val[6] = fin[6];
         
-        n_client.write(b_val,6);
+        n_client.write(b_val,7);
 
         delay(250);
       }
