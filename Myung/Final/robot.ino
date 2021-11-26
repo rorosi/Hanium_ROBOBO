@@ -5,18 +5,31 @@
 
 char ssid[] = "test";       // your network SSID (name)
 char pass[] = "12345678";   // your network password (use for WPA, or use as key for WEP)
-
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 int status = WL_IDLE_STATUS;
 char server[] = "192.168.4.1";    // name address for Google (using DNS)
 WiFiClient client;
 
 byte flex_1_val, flex_2_val, flex_3_val, flex_4_val, flex_5_val, flex_6_val, flex_7_val;
+int num1, num2, num3, num4, num5;
+
 
 void setup() {
   Serial.begin(9600);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
+
+  pwm.begin();
+  pwm.setPWM(1,0,150);  //엄지
+  pwm.setPWM(2,0,150);  //검지
+  pwm.setPWM(3,0,150);  //중지
+  pwm.setPWM(4,0,150);  //약지
+  pwm.setPWM(5,0,150);  //소지
+  pwm.setPWMFreq(60); //오작동 한다면 50Hz에서 조금씩 바꿔보기 
+
+
+
 
   // check for the WiFi module:
   if (WiFi.status() == WL_NO_MODULE) {
@@ -53,33 +66,38 @@ void loop() {
   // 서버에서 전송한 데이터가 있다면
   while (client.available()) {
     flex_1_val = client.read();
+    num1 = map(flex_1_val, 0, 150, 450, 150);
     
     flex_2_val = client.read();
+    num2 = map(flex_2_val, 0, 150, 450, 150);
 
     flex_3_val = client.read();
+    num3 = map(flex_3_val, 0, 150, 450, 150);
     
     flex_4_val = client.read();
+    num4 = map(flex_4_val, 0, 150, 450, 150);
 
     flex_5_val = client.read();
+    num5 = map(flex_5_val, 0, 150, 450, 150);
+    
+    pwm.setPWM(5,0,num1);
+    pwm.setPWM(4,0,num2);
+    pwm.setPWM(3,0,num3);
+    pwm.setPWM(2,0,num4);
+    pwm.setPWM(1,0,num5);
 
-//    flex_6_val = client.read();
-//
-//    flex_7_val = client.read();
-
-    Serial.print(flex_1_val);
+    Serial.print(num1);
     Serial.print(" ");
-    Serial.print(flex_2_val);
+    Serial.print(num2);
     Serial.print(" ");
-    Serial.print(flex_3_val);
+    Serial.print(num3);
     Serial.print(" ");
-    Serial.print(flex_4_val);
+    Serial.print(num4);
     Serial.print(" ");
-    Serial.print(flex_5_val);
-    Serial.print(" ");
-//    Serial.print(flex_6_val);
-//    Serial.print(" ");
-//    Serial.print(flex_7_val);
+    Serial.print(num5);
     Serial.println(" ");
+
+
   }
 }
 
