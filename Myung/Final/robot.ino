@@ -11,7 +11,7 @@ char server[] = "192.168.4.1";    // name address for Google (using DNS)
 WiFiClient client;
 
 byte flex_1_val, flex_2_val, flex_3_val, flex_4_val, flex_5_val, flex_6_val, flex_7_val;
-int num1, num2, num3, num4, num5;
+int num1, num2, num3, num4, num5, num6;
 
 
 void setup() {
@@ -26,8 +26,9 @@ void setup() {
   pwm.setPWM(3,0,150);  //중지
   pwm.setPWM(4,0,150);  //약지
   pwm.setPWM(5,0,150);  //소지
+  pwm.setPWM(13,0,160);  //소지
   pwm.setPWMFreq(60); //오작동 한다면 50Hz에서 조금씩 바꿔보기 
-
+600
 
 
 
@@ -79,12 +80,16 @@ void loop() {
 
     flex_5_val = client.read();
     num5 = map(flex_5_val, 0, 150, 450, 150);
+
+    flex_6_val = client.read();
+    num6 = map(flex_6_val, 0, 150, 160, 600);
     
     pwm.setPWM(5,0,num1);
     pwm.setPWM(4,0,num2);
     pwm.setPWM(3,0,num3);
     pwm.setPWM(2,0,num4);
     pwm.setPWM(1,0,num5);
+    pwm.setPWM(13,0,num6);
 
     Serial.print(num1);
     Serial.print(" ");
@@ -95,6 +100,8 @@ void loop() {
     Serial.print(num4);
     Serial.print(" ");
     Serial.print(num5);
+    Serial.print(" ");
+    Serial.print(num6);
     Serial.println(" ");
 
 
