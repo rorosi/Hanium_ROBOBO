@@ -161,33 +161,36 @@ void sendToData(){
       Serial.print(" ");
       Serial.println(min4);
       delay(1000);
-
-//      Serial.println("3초간 손목을 가만히 있으시오");
-//      delay(3000);
-//      if (IMU.accelerationAvailable()) {
-//        IMU.readAcceleration(min_x, min_y, min_z);
-//        Serial.print(min_x);
-//        Serial.print(" ");
-//        Serial.println(min_y);
-//      }
-//      delay(1000);
-//
-//      Serial.println("3초간 손목을 돌려주시오");
-//      delay(3000);
-//      if (IMU.accelerationAvailable()) {
-//        IMU.readAcceleration(max_x, max_y, max_z);
-//        Serial.print(max_x);
-//        Serial.print(" ");
-//        Serial.println(max_y);
-//      }
-//      delay(1000);
-
-      if (mpu.update()) {
+      
+      
+    if (mpu.update()) {
         static uint32_t prev_ms = millis();
         if (millis() > prev_ms + 25) {
             prev_ms = millis();
         }
     }
+
+      Serial.println("3초간 손목을 가만히 있으시오");
+      delay(3000);
+      if (IMU.accelerationAvailable()) {
+        IMU.readAcceleration(min_x, min_y, min_z);
+        Serial.print(min_x);
+        Serial.print(" ");
+        Serial.println(min_y);
+      }
+      delay(1000);
+
+      Serial.println("3초간 손목을 돌려주시오");
+      delay(3000);
+      if (IMU.accelerationAvailable()) {
+        IMU.readAcceleration(max_x, max_y, max_z);
+        Serial.print(max_x);
+        Serial.print(" ");
+        Serial.println(max_y);
+      }
+      delay(1000);
+
+
       while (n_client.connected()) {            // 로봇 팔에 데이터를 전송
       if (IMU.accelerationAvailable()) {
           IMU.readAcceleration(x, y, z);
@@ -211,6 +214,7 @@ void sendToData(){
         fin[2] = constrain(map(fin[2], min2, max2, 0, 150), 0, 150);
         fin[3] = constrain(map(fin[3], min3, max3, 0, 150), 0, 150);
         fin[4] = fin[3];
+        fin[5] = constrain(map(fin[5], min_y, max_y, 0, 150), 0, 150);
 
         for(int i=0; i<6; i++){
           b_val[i] = fin[i];
