@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include <WiFiNINA.h>
 #include <PubSubClient.h>
-#include <Arduino_LSM9DS1.h>
+#include <Arduino_LSM6DS3.h>
 
 char ap_ssid[] = "test";        // AP모드의 SSID
 char ap_pass[] = "12345678";        // AP모드의 PASS
@@ -17,9 +17,10 @@ PubSubClient client(n_client);
 
 String msg = "";
 String dohang_count = "0";
-byte b_val[6] = {1, 2, 3, 4, 5, 6};
+byte b_val[5] = {1, 2, 3, 4, 5};
+String ta = "";
 
-int fin[7];
+int fin[5];
 float x, y, z;
 float max_x, max_y, max_z;
 float min_x, min_y, min_z;
@@ -30,10 +31,10 @@ void setup() {
   
   Serial.begin(115200);
   while (!Serial) {;}
-  if (!IMU.begin()) {
-    Serial.println("Failed to initialize IMU!");
-    while (1);
-  }
+//  if (!IMU.begin()) {
+//    Serial.println("Failed to initialize IMU!");
+//    while (1);
+//  }
   delay(1000);
                   
   if (WiFi.status() == WL_NO_MODULE) {     
@@ -115,6 +116,7 @@ void wifiAPMode()
 
 
 void sendToData(){
+
   while(true){
     n_client = server.available();   // 로봇 팔 Client의 접속을 기다림   
     if (n_client) {                             // 로봇 팔측 Client 접속했다면
@@ -158,25 +160,25 @@ void sendToData(){
       Serial.println(min4);
       delay(1000);
 
-      Serial.println("3초간 손목을 가만히 있으시오");
-      delay(3000);
-      if (IMU.gyroscopeAvailable()) {
-        IMU.readGyroscope(min_x, min_y, min_z);
-        Serial.print(min_x);
-        Serial.print(" ");
-        Serial.println(min_y);
-      }
-      delay(1000);
-
-      Serial.println("3초간 손목을 돌려주시오");
-      delay(3000);
-      if (IMU.gyroscopeAvailable()) {
-        IMU.readGyroscope(max_x, max_y, max_z);
-        Serial.print(max_x);
-        Serial.print(" ");
-        Serial.println(max_y);
-      }
-      delay(1000);
+//      Serial.println("3초간 손목을 가만히 있으시오");
+//      delay(3000);
+//      if (IMU.gyroscopeAvailable()) {
+//        IMU.readGyroscope(min_x, min_y, min_z);
+//        Serial.print(min_x);
+//        Serial.print(" ");
+//        Serial.println(min_y);
+//      }
+//      delay(1000);
+//
+//      Serial.println("3초간 손목을 돌려주시오");
+//      delay(3000);
+//      if (IMU.gyroscopeAvailable()) {
+//        IMU.readGyroscope(max_x, max_y, max_z);
+//        Serial.print(max_x);
+//        Serial.print(" ");
+//        Serial.println(max_y);
+//      }
+//      delay(1000);
       
       
       while (n_client.connected()) {            // 로봇 팔에 데이터를 전송
@@ -191,23 +193,19 @@ void sendToData(){
         fin[2] = constrain(map(fin[2], min2, max2, 0, 150), 0, 150);
         fin[3] = constrain(map(fin[3], min3, max3, 0, 150), 0, 150);
         fin[4] = fin[3];
+//
+//        if (IMU.gyroscopeAvailable()) {
+//          IMU.readGyroscope(x, y, z);
+//        }
 
-        if (IMU.gyroscopeAvailable()) {
-          IMU.readGyroscope(x, y, z);
-        }
-        fin[5] = constrain(map(x, min_x, max_x, 0, 150), 0, 150);
-        fin[6] = constrain(map(y, min_y, max_y, 0, 150), 0, 150);
-        
 
         for(int i=0; i<5; i++){
           b_val[i] = fin[i];
         }
-        b_val[5] = fin[5];
-        b_val[6] = fin[6];
-        
-        n_client.write(b_val,7);
 
+        n_client.write(b_val,5);
         delay(250);
+        
       }
     }
   }
