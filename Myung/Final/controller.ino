@@ -2,6 +2,8 @@
 #include <WiFiNINA.h>
 #include <PubSubClient.h>
 #include <Arduino_LSM6DS3.h>
+#include "MPU9250.h"
+MPU9250 mpu;
 
 char ap_ssid[] = "test";        // AP모드의 SSID
 char ap_pass[] = "12345678";        // AP모드의 PASS
@@ -17,10 +19,10 @@ PubSubClient client(n_client);
 
 String msg = "";
 String dohang_count = "0";
-byte b_val[5] = {1, 2, 3, 4, 5};
+byte b_val[6] = {1, 2, 3, 4, 5, 6};
 String ta = "";
 
-int fin[5];
+int fin[6];
 float x, y, z;
 float max_x, max_y, max_z;
 float min_x, min_y, min_z;
@@ -28,15 +30,11 @@ float min_x, min_y, min_z;
 
 void setup() {
   // put your setup code here, to run once:
-  
   Serial.begin(115200);
   while (!Serial) {;}
-//  if (!IMU.begin()) {
-//    Serial.println("Failed to initialize IMU!");
-//    while (1);
-//  }
   delay(1000);
-                  
+  
+                   
   if (WiFi.status() == WL_NO_MODULE) {     
     Serial.println("Communication with WiFi module failed!");  
     while (true);
@@ -59,8 +57,12 @@ void setup() {
 
   Serial.println("공유기와 와이파이 연결은 잘 됩니다.");
   printWifiStatus();
+  
+  if (!IMU.begin()) {
+    Serial.println("Failed to initialize IMU!");
 
-
+    while (1);
+  }
   client.setServer(mqtt_server, 1883); // MQTT 서버에 연결합니다.
   client.setCallback(callback);
   reconnect();
@@ -77,8 +79,8 @@ void loop() {
   if(dohang_count=="1"){
     wifiAPMode();
   }
-}
 
+}
 void wifiAPMode()
 {
   dohang_count="2";
@@ -162,8 +164,8 @@ void sendToData(){
 
 //      Serial.println("3초간 손목을 가만히 있으시오");
 //      delay(3000);
-//      if (IMU.gyroscopeAvailable()) {
-//        IMU.readGyroscope(min_x, min_y, min_z);
+//      if (IMU.accelerationAvailable()) {
+//        IMU.readAcceleration(min_x, min_y, min_z);
 //        Serial.print(min_x);
 //        Serial.print(" ");
 //        Serial.println(min_y);
@@ -172,16 +174,32 @@ void sendToData(){
 //
 //      Serial.println("3초간 손목을 돌려주시오");
 //      delay(3000);
-//      if (IMU.gyroscopeAvailable()) {
-//        IMU.readGyroscope(max_x, max_y, max_z);
+//      if (IMU.accelerationAvailable()) {
+//        IMU.readAcceleration(max_x, max_y, max_z);
 //        Serial.print(max_x);
 //        Serial.print(" ");
 //        Serial.println(max_y);
 //      }
 //      delay(1000);
-      
-      
+
+      if (mpu.update()) {
+        static uint32_t prev_ms = millis();
+        if (millis() > prev_ms + 25) {
+            prev_ms = millis();
+        }
+    }
       while (n_client.connected()) {            // 로봇 팔에 데이터를 전송
+      if (IMU.accelerationAvailable()) {
+          IMU.readAcceleration(x, y, z);
+      
+          Serial.print(x);
+          Serial.print('\t');
+          Serial.print(y);
+          Serial.print('\t');
+          Serial.println(z);
+                fin[5] = y*100;
+        }
+
         fin[0] = analogRead(A0);
         fin[1] = analogRead(A1);
         fin[2] = analogRead(A2);
@@ -193,19 +211,15 @@ void sendToData(){
         fin[2] = constrain(map(fin[2], min2, max2, 0, 150), 0, 150);
         fin[3] = constrain(map(fin[3], min3, max3, 0, 150), 0, 150);
         fin[4] = fin[3];
-//
-//        if (IMU.gyroscopeAvailable()) {
-//          IMU.readGyroscope(x, y, z);
-//        }
 
-
-        for(int i=0; i<5; i++){
+        for(int i=0; i<6; i++){
           b_val[i] = fin[i];
         }
+        
 
-        n_client.write(b_val,5);
+        n_client.write(b_val,6);
 
-        for(int i=0; i<5; i++){
+        for(int i=0; i<6; i++){
           Serial.print(b_val[i]);
           Serial.print(" ");
         }
@@ -232,11 +246,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println(msg);
   dohang_count=(String)msg;
 }
-
-
-
-
-
 
 void printWifiStatus() {
   // print the SSID of the network you're attached to:
@@ -266,4 +275,13 @@ void reconnect() {
       delay(5000);
     }
   }
+}
+
+void print_roll_pitch_yaw() {
+    Serial.print("Yaw, Pitch, Roll: ");
+    Serial.print(mpu.getYaw(), 2);
+    Serial.print(", ");
+    Serial.print(mpu.getPitch(), 2);
+    Serial.print(", ");
+    Serial.println(mpu.getRoll(), 2);
 }
