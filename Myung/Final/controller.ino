@@ -204,6 +204,13 @@ void sendToData(){
         }
 
         n_client.write(b_val,5);
+
+        for(int i=0; i<5; i++){
+          Serial.print(b_val[i]);
+          Serial.print(" ");
+        }
+        Serial.println("");
+        
         delay(250);
         
       }
