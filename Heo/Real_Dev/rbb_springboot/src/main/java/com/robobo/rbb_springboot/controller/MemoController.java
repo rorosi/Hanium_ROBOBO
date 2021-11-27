@@ -13,6 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -37,6 +40,16 @@ public class MemoController {
         return "timeline";
     }
 
+    @GetMapping("api/memos/getUserName")
+    public @ResponseBody String getUserName(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return principalDetails.getUsername();
+    }
+
+    @GetMapping("api/memos/getUserEmail")
+    public @ResponseBody String getUserEmail(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return principalDetails.getUserEmail();
+    }
+
     @PostMapping("/api/memos")
     public @ResponseBody Memo createMemo(@RequestBody MemoRequestDto requestDto) {
         Memo memo = new Memo(requestDto);
@@ -45,11 +58,21 @@ public class MemoController {
 
     @GetMapping("/api/memos")
     public @ResponseBody List<Memo> readMemo() {
-//        LocalDateTime now = LocalDateTime.now();
-//        LocalDateTime before24Hour = LocalDateTime.now().minusDays(1);
-//        return memoRepository.findAllByModifiedAtBetweenOrderByModifiedAtDesc(now , before24Hour);
-
         return memoRepository.findAll(Sort.by(Sort.Direction.DESC, "modifiedAt"));
+    }
+
+    //최근 글
+    @GetMapping("/api/lastmemo")
+    public @ResponseBody Memo readLastMemo() {
+        return memoRepository.findTop1ByOrderByIdDesc();
+    }
+
+    // 24시간 내 작업내역 등록 갯수
+    @GetMapping("/api/numberoflastmemo")
+    public @ResponseBody long numberOfLastMemo() {
+        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0,0,0));//어제
+        LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+        return memoRepository.countByModifiedAtBetween(startDatetime, endDatetime);
     }
 
     @PutMapping("/api/memos/{id}")
@@ -62,4 +85,5 @@ public class MemoController {
         memoRepository.deleteById(id);
         return id;
     }
+
 }

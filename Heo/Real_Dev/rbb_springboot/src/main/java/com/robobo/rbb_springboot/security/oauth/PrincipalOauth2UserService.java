@@ -1,9 +1,13 @@
 package com.robobo.rbb_springboot.security.oauth;
 
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import com.robobo.rbb_springboot.model.User;
 import com.robobo.rbb_springboot.model.UserRole;
 import com.robobo.rbb_springboot.repository.UserRepository;
 import com.robobo.rbb_springboot.security.auth.PrincipalDetails;
+import com.robobo.rbb_springboot.security.oauth.provider.FacebookUserInfo;
+import com.robobo.rbb_springboot.security.oauth.provider.GoogleUserInfo;
+import com.robobo.rbb_springboot.security.oauth.provider.OAuth2UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,13 +45,28 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         // userRequest 정보 -> loadUser 함수 호출 -> 구글로부터 회원 프로필 받아준다.
         System.out.println("getAttribute:" + oAuth2User.getAttributes());
 
-        //회원가입을 강제로(자동으로) 진행
-        String provider = userRequest.getClientRegistration().getClientId(); // google
-        String providerId = oAuth2User.getAttribute("sub"); // 1023231~~~
-        String username = oAuth2User.getAttribute("name");
-        String password = passwordEncoder.encode("비밀번호");
 
-        String email = oAuth2User.getAttribute("email");
+
+        //회원가입을 강제로(자동으로) 진행
+        OAuth2UserInfo oAuth2UserInfo = null;
+        if (userRequest.getClientRegistration().getRegistrationId().equals("google")){
+            System.out.println("구글 로그인 요청");
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+        }
+        else if (userRequest.getClientRegistration().getRegistrationId().equals("facebook")) {
+            System.out.println("페이스북 로그인 요청");
+            oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
+        }
+        else {
+            System.out.println("구글과 페이스북만 지원합니다.");
+        }
+
+        String provider = oAuth2UserInfo.getProvider(); // google
+        String providerId = oAuth2UserInfo.getProviderId(); // 1023231~~~
+        String username = oAuth2UserInfo.getName();
+        String password = passwordEncoder.encode("비밀번호 어차피 여기선 필요없음");
+
+        String email = oAuth2UserInfo.getEmail();
         UserRole role = UserRole.ROLE_USER;
 
         User user = userRepository.findByEmail(email).orElse(null);
